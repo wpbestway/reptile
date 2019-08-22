@@ -1,0 +1,11 @@
+{
+  "name": "part2",
+  "version": "1.0.0",
+  "description": "node 爬取羞羞的图片",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "wpbest",
+  "license": "ISC"
+}
