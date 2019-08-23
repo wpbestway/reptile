@@ -6,7 +6,7 @@
 
 而作为一个网站，该怎么限制这些搜索引擎爬取，或是指定爬虫的爬取内容呢？请看robots.txt文件，演示下淘宝的robots.txt在百度和谷歌上的差异；解释下为什么淘宝这些网址不需要ｓｅｏ；
 
-解释下ｓｅｏ的优化；
+解释下seo的优化；
 
 如果一个爬虫不按这个文件协议来，从法律上来说，这些爬虫都是违法侵犯知识产权的，都是违法的
 
@@ -24,7 +24,24 @@
 浏览器访问网页，实则是浏览器发送了一堆HTTP(S)请求，同样的，可以模仿浏览器发送http请求，获取内容，http是指超文本传输协议，是一种数据传输协议；
 ```js
 // 通过node的request请求模块获取网页内容
+const express = require('express')
+const app = express()
+const superagent = require('superagent')
 
+app.listen(4000, function () {})
+app.get('/', async (req, res, next) => {
+  res.send(hotNews)
+})
+
+superagent
+  .get('https://news.baidu.com/')
+  .end((err, res) => {
+  if (err) {
+    console.log('抓取失败', err)
+  } else {
+    console.log('抓取成功', res.text)
+  }
+})
 ```
 网络请求的前提条件
 １．登录验证，只有登录后才能获取数据
@@ -47,7 +64,39 @@
 如下演示css选择器分析提取数据：
 ```js
 // 通过node插件cheerio.js，模仿jquery提取数据
+const express = require('express'),
+      app = express(),
+      superagent = require('superagent'),
+      cheerio = require('cheerio');
+let hotNews = []
 
+app.listen(4000, function () {})
+app.get('/', async (req, res, next) => {
+  res.send(hotNews)
+})
+
+superagent
+  .get('https://news.baidu.com/')
+  .end((err, res) => {
+  if (err) {
+    console.log('抓取失败', err)
+  } else {
+    console.log('抓取成功')
+    getHotNews(res.text)
+    console.log(hotNews)
+  }
+})
+
+let getHotNews = (html) => {
+  let $ = cheerio.load(html)
+  $('#pane-news li').each((idx, ele) => {
+    let news = {
+      text: unescape($(ele).find('a').html().replace(/&#x/g,'%u').replace(/;/g,'')),
+      href: unescape($(ele).find('a').attr('href').replace(/&#x/g,'%u').replace(/;/g,''))
+    }
+    hotNews.push(news)
+  })
+}
 ```
 一个初步的爬虫已经完成，但是功能依然有限，无法做到通用，还只是一个初级的小爬虫，接下来的几次分享，将对爬虫这门技术一步步深入，带大家慢慢深入到爬虫的高级用法，让大家领略技术的魅力；
 
