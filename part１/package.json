@@ -11,6 +11,6 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
     "express": "^4.17.1",
-    "superagent": "^5.1.0"
+    "superagent": "^5.3.1"
   }
 }
